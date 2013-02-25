@@ -6,7 +6,7 @@
 
 var assert        = require('assert');
 var nock          = require('nock');
-var Authenticator = require('./../lib/authenticator');
+var Authenticator = require('./../authenticator');
 
 // Setup Nock
 (function setupNock() {
