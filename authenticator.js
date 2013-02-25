@@ -71,7 +71,7 @@ Authenticator.prototype.initiate = function (callback_url, fn) {
 //
 // * **fn** function called with resulting credentials.
 //
-Authenticator.prototype.complete = function(fn) {
+Authenticator.prototype.complete = function(res, fn) {
   var self = this;
   var url = 'https://api.dropbox.com/1/oauth/access_token';
   var oauth = {
