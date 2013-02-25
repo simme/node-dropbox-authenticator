@@ -52,3 +52,7 @@ http.createServer(function (req, res) {
 });
 ```
 
+# License
+
+ISC
+
