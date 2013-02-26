@@ -52,6 +52,12 @@ http.createServer(function (req, res) {
 });
 ```
 
+Note that this fails if many users access the server simultaneously. This is
+because `Authenticator` needs to store some tokens internally between each
+step. I'm thinking about a fix for this. In the mean time I recommend doing
+some kind of session thing and tying one instance of `Authenticator` to each
+session.
+
 # License
 
 ISC
