@@ -5,7 +5,7 @@ Simple authentication helper for Dropbox.
 
 # Installation
 
-`$ npm install dropbox-authentixator`
+`$ npm install dropbox-authenticator`
 
 # Usage
 
