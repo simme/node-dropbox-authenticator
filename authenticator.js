@@ -111,10 +111,9 @@ Authenticator.prototype.complete = function(res, fn) {
         consumer_key: self.consumer_key,
         consumer_secret: self.consumer_secret,
         token: parsed.oauth_token,
-        token_secret: parsed.oauth_token_secret
+        token_secret: parsed.oauth_token_secret,
+        uid: parsed.uid
       };
-      // @TODO: Look for user id.
-      //console.log(parsed, credentials);
 
       fn(undefined, credentials);
     }
