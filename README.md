@@ -17,14 +17,20 @@ The `initiate` function asks Dropbox for a request token and generates a URL
 that you should send your user to. You are then responsible for providing
 a calback URL that Dropbox can send the user to.
 
+**NOTE:** The Authenticator attaches an ID to the callback URL which makes it
+possible to have several simultaneous authentication attempts by several users.
+It does however make it impossible to use your own querystring with the
+callback url.
+
 Once the user comes back to you, you complete the authorization by calling
 `complete`.
 
 ## Complete
 
-The `complete` function takes the response stream from an HTTP server and a
-call back function. Once authorization is complete this function is called
-with the OAuth credentials. It's up to you to store these.
+The `complete` function takes the request and response streams from an HTTP
+server request listener. As well as a callback function. Once authorization is
+complete this function is called with the OAuth credentials. It's up to you
+to store these.
 
 # Example
 
@@ -44,7 +50,7 @@ http.createServer(function (req, res) {
     });
   }
   else {
-    auth.complete(res, function (err, credentials) {
+    auth.complete(req, res, function (err, credentials) {
       // Save credentials or something here
       console.log(credentials);
     });

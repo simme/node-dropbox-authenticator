@@ -14,8 +14,7 @@ var qs      = require('querystring');
 var Authenticator = function (app_id, app_secret) {
   this.consumer_key = app_id;
   this.consumer_secret = app_secret;
-  this.token = '';
-  this.token_secret = '';
+  this.tokens = [];
 
   this.request_url = 'https://api.dropbox.com/1/oauth/request_token';
   this.access_url  = 'https://api.dropbox.com/1/oauth/access_token';
@@ -37,6 +36,9 @@ Authenticator.prototype.initiate = function (callback_url, fn) {
     consumer_secret: this.consumer_secret
   };
 
+  this.tokens.push({token: '', token_secret: ''});
+  var id = this.tokens.length - 1;
+
   // Request a request token from Dropbox.
   request({url: this.request_url, oauth: oauth}, function (err, res, body) {
     // Had an error.
@@ -47,13 +49,13 @@ Authenticator.prototype.initiate = function (callback_url, fn) {
 
     // Parse response and store away tokens.
     var response = qs.parse(body);
-    self.token = response.oauth_token;
-    self.token_secret = response.oauth_token_secret;
+    self.tokens[id].token = response.oauth_token;
+    self.tokens[id].token_secret = response.oauth_token_secret;
 
     // Build URL to be opened in browser.
     var parameters = {
       oauth_token: response.oauth_token,
-      oauth_callback: callback_url
+      oauth_callback: callback_url + '?id=' + id
     };
 
     var query = qs.stringify(parameters);
@@ -69,16 +71,20 @@ Authenticator.prototype.initiate = function (callback_url, fn) {
 //
 // Complete authorization by POSTing to Dropbox.
 //
+// * **req** HTTP request object.
+// * **res** HTTP response object.
 // * **fn** function called with resulting credentials.
 //
-Authenticator.prototype.complete = function(res, fn) {
+Authenticator.prototype.complete = function(req, res, fn) {
   var self = this;
-  var url = 'https://api.dropbox.com/1/oauth/access_token';
+  var parts = url.parse(req.url);
+  var query = qs.parse(parts.query);
+  var id = query.id;
   var oauth = {
     consumer_key: this.consumer_key,
     consumer_secret: this.consumer_secret,
-    token: this.token,
-    token_secret: this.token_secret
+    token: this.tokens[id].token,
+    token_secret: this.tokens[id].token_secret
   };
 
   // Request access token
